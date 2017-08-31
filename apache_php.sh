@@ -50,9 +50,6 @@ fi
         	sed -i 's/#ServerName/ServerName/' $source/httpd/conf/httpd.conf
         	sed -i 's#www.example.com:80#'$domainname'#' $source/httpd/conf/httpd.conf
         	sed -i 's#'$source'/httpd/htdocs#'$document_root'#' $source/httpd/conf/httpd.conf
-        	#Tao duong dan document root
-        	mkdir -p $document_root
-        	chown -R apache:apache $document_root
         	echo "qua trinh cai dat da xong, bat dau qua trinh khoi dong apache:"
         	n=`echo $version_apache | cut -d . -f 1,2`
         	if [ $n == httpd-2.4 ]; then
@@ -141,6 +138,7 @@ fi
                 	#Tao file index de test
                 	touch $document_root/index.php
                 	echo "<?php phpinfo(); ?>" >> $document_root/index.php
+			chown -R apache:apache $document_root
                 	$source/php/sbin/php-fpm
                 	bien=`ifconfig`
                 	ip=`echo $bien | cut -c 61-75`
