@@ -27,7 +27,7 @@ fi
         	tar xzvf $version_apache.tar.gz
         	cd $version_apache/srclib
         	wget https://apr.apache.org/download.cgi
-        	grep ""http://mirror.downloadvn.com/apache//apr" download.cgi
+        	grep "http://mirror.downloadvn.com/apache//apr" download.cgi
         	echo -n "MOI BAN NHAP PHIEN BAN APR MOI NHAT O TREN THEO DANG apr-1.6.2 :"; read version_apr
         	echo -n "MOI BAN NHAP PHIEN BAN APR MOI NHAT O TREN THEO DANG apr-util-1.6.0 :";read version_apr_util
         	wget http://mirror.downloadvn.com/apache//apr/$version_apr.tar.gz
