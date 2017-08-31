@@ -20,7 +20,7 @@ fi
 	wget https://httpd.apache.org/download.cgi
 	grep "Source:" download.cgi
 	echo -n "MOI BAN NHAP PHIEN BAN APACHE MOI NHAT O TREN THEO DANG httpd-2.4.27:"; read version_apache
-	wget http://mirrors.viethosting.com/apache//httpd/$version_apache.tar.gz
+	wget http://mirror.downloadvn.com/apache//httpd/$version_apache.tar.gz
 	if [ "$?" != 0 ] && [ -d $path_shell ] && [ ];then
         	echo "Error download "
 	else
@@ -30,8 +30,8 @@ fi
         	grep "http://mirrors.viethosting.com/apache//apr/" download.cgi
         	echo -n "MOI BAN NHAP PHIEN BAN APR MOI NHAT O TREN THEO DANG apr-1.6.2 :"; read version_apr
         	echo -n "MOI BAN NHAP PHIEN BAN APR MOI NHAT O TREN THEO DANG apr-util-1.6.0 :";read version_apr_util
-        	wget http://mirrors.viethosting.com/apache//apr/$version_apr.tar.gz
-        	wget http://mirrors.viethosting.com/apache//apr/$version_apr_util.tar.gz
+        	wget http://mirror.downloadvn.com/apache//apr/$version_apr.tar.gz
+        	wget http://mirror.downloadvn.com/apache//apr/$version_apr_util.tar.gz
         	tar -xvzf $version_apr.tar.gz
         	mv $version_apr apr
 		tar -xvzf $version_apr_util.tar.gz
