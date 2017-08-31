@@ -40,6 +40,8 @@ else
 	echo -n "Nhap thong so domainname: "; read domainname
         echo -n "Nhap thong so port:";read port
         echo -n "Nhap thong so document_root:";read document_root
+	#Tao duong dan document root
+        mkdir -p $document_root
 	cd ..
 	./configure --prefix=$apache_source/httpd --enable-so --enable-deflate --enable-expires --enable-headers --enable-rewrite --with-included-apr --with-included-apr-util
 	make -j 2
@@ -50,8 +52,6 @@ else
         sed -i 's/#ServerName/ServerName/' $apache_source/httpd/conf/httpd.conf
 	sed -i 's#www.example.com:80#'$domainname'#' $apache_source/httpd/conf/httpd.conf
         sed -i 's#'$apache_source'/httpd/htdocs#'$document_root'#' $apache_source/httpd/conf/httpd.conf
-        #Tao duong dan document root
-        mkdir -p $document_root
 	chown -R apache:apache $document_root
         netstat -ntpl
         #Tao file index de test
