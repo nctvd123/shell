@@ -29,6 +29,8 @@ else
 	echo -n "Nhap thong so domainname: "; read domainname
 	echo -n "Nhap thong so port:";read port
         echo -n "Nhap thong so document_root:";read root
+	#Tao duong dan document root
+        mkdir -p $root
 	tar -xvzf $version_nginx.tar.gz
 	cd $version_nginx
 	./configure --prefix=$nginx_source/nginx/ --with-file-aio --with-http_mp4_module --with-http_flv_module --with-http_secure_link_module --with-http_realip_module --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --without-http_ssi_module --without-http_scgi_module --without-http_uwsgi_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_image_filter_module
@@ -37,8 +39,6 @@ else
 	sed -i '36s/80/'$port'/' $nginx_source/nginx/conf/nginx.conf
         sed -i '37s/localhost/'$domainname'/' $nginx_source/nginx/conf/nginx.conf
         sed -i '44s#html#'$root'#' $nginx_source/nginx/conf/nginx.conf
-	#Tao duong dan document root
-        mkdir -p $root
 	echo "qua trinh cai dat da xong, bat dau qua trinh khoi dong nginx:"
 	$nginx_source/nginx/sbin/nginx
 	netstat -ntpl
