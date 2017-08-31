@@ -28,8 +28,6 @@ fi
 		echo -n "Nhap thong so domainname: "; read domainname
 		echo -n "Nhap thong so port";read port
 		echo -n "Nhap thong so document_root";read document_root
-		#Tao duong dan document root 
-		mkdir -p $document_root
         	tar -xvzf $version_nginx.tar.gz
         	cd $version_nginx
         	./configure --prefix=$source/nginx/ --with-file-aio --with-http_mp4_module --with-http_flv_module --with-http_secure_link_module --with-http_realip_module --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --without-http_ssi_module --without-http_scgi_module --without-http_uwsgi_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_image_filter_module
@@ -99,6 +97,7 @@ fi
         	#Tao file index de test
         	touch $document_root/index.php
         	echo "<?php phpinfo(); ?>" >> $document_root/index.php
+		chown -R nginx:nginx $document_root
 		$source/php/sbin/php-fpm
 		bien=`ifconfig`
 		ip=`echo $bien | cut -c 61-75`
