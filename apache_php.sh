@@ -15,6 +15,8 @@ if [ ! -d $path_down ];then
         mkdir -p $path_down
 fi
 	yum -y install apr-devel apr-util-devel gcc pcre-devel.x86_64 zlib-devel openssl-devel wget vim links
+	#Tao duong dan document root
+        mkdir -p $document_root
 	cd $path_down
 	#Kiem tra cac phien ban moi nhat
 	wget https://httpd.apache.org/download.cgi
@@ -132,8 +134,6 @@ fi
                         		sed -i -e "s/;listen.allowed_clients = 127.0.0.1/listen.allowed_clients = 127.0.0.1/" $source/php/etc/php-fpm.d/www.conf
                 		fi
         		fi
-                	#Tao duong dan document root
-                	mkdir -p $document_root
                 	netstat -ntpl
                 	#Tao file index de test
                 	touch $document_root/index.php
