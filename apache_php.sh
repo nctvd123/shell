@@ -15,8 +15,6 @@ if [ ! -d $path_down ];then
         mkdir -p $path_down
 fi
 	yum -y install apr-devel apr-util-devel gcc pcre-devel.x86_64 zlib-devel openssl-devel wget vim links
-	#Tao duong dan document root
-        mkdir -p $document_root
 	cd $path_down
 	#Kiem tra cac phien ban moi nhat
 	wget https://httpd.apache.org/download.cgi
@@ -42,6 +40,8 @@ fi
         	echo -n "Nhap thong so domainname: "; read domainname
         	echo -n "Nhap thong so port:";read port
         	echo -n "Nhap thong so document_root:";read document_root
+		#Tao duong dan document root
+        	mkdir -p $document_root
         	cd ..
         	./configure --prefix=$source/httpd --enable-so --enable-deflate --enable-expires --enable-headers --enable-rewrite --with-included-apr --with-included-apr-util
         	make -j 2
