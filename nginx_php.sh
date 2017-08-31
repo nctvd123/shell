@@ -4,7 +4,7 @@ yum install ntp -y
 mv /etc/localtime /etc/localtime.bak
 ln -s /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/localtime
 service ntpd restart
-#useradd nginx
+useradd nginx
 #Tat selinux
 setenforce 0
 #Tat iptables
