@@ -8,6 +8,7 @@ service ntpd restart
 setenforce 0
 #Tat iptables
 service iptables stop
+useradd nginx
 #Cai dat nginx
 path_shell=/root/scripts/static
 path_down=/usr/src/static
