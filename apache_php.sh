@@ -1,8 +1,8 @@
 #Cai dat thoi gian
-yum install ntp -y
-mv /etc/localtime /etc/localtime.bak
-ln -s /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/localtime
-service ntpd restart
+#yum install ntp -y
+#mv /etc/localtime /etc/localtime.bak
+#ln -s /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/localtime
+#service ntpd restart
 useradd apache
 #Tat selinux
 setenforce 0
@@ -57,7 +57,7 @@ fi
         	if [ $n == httpd-2.4 ]; then
 				#phien ban 2.4
 				echo "cau hinh apache-2.4 chay php:"
-				sed -i '503s#$#ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000'$document_root'/$1#' $source/httpd/conf/httpd.conf
+				echo "ProxyPassMatch ^/(.*\\.php(/.*)?)$ fcgi://127.0.0.1:9000'$document_root'/$1" >> $source/httpd/conf/httpd.conf
 				sed -i '116s/#LoadModule proxy_module modules\/mod_proxy.so/LoadModule proxy_module modules\/mod_proxy.so/'  $source/httpd/conf/httpd.conf
 				sed -i '120s/#LoadModule proxy_fcgi_module modules\/mod_proxy_fcgi.so/LoadModule proxy_fcgi_module modules\/mod_proxy_fcgi.so/'  $source/httpd/conf/httpd.conf
 				sed -i '251s/index.html/index.php index.html/'  $source/httpd/conf/httpd.conf
@@ -75,10 +75,10 @@ fi
 					cp .libs/mod_fastcgi.so $source/httpd/modules/
 					echo "LoadModule fastcgi_module $source/httpd/modules/mod_fastcgi.so" >> $source/httpd/conf/httpd.conf
 					sed -i '119s/Deny/Allow/'  $source/httpd/conf/httpd.conf
-        			sed -i '405s/#Include/Include/'  $source/httpd/conf/httpd.conf
+        				sed -i '405s/#Include/Include/'  $source/httpd/conf/httpd.conf
 					sed -i '405s/httpd-vhosts/'$domainname'/'  $source/httpd/conf/httpd.conf
 					mv $source/httpd/conf/extra/httpd-vhosts.conf $source/httpd/conf/extra/$domainname.conf
-					sed -i '19s/80/'$port'/'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '19s/80/'$port'/g'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '27s/80/'$port'/'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '29s#'$source'/httpd/docs/dummy-host.example.com#'$document_root'#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '30,33s/dummy-host.example.com/'$domainname'/'  $source/httpd/conf/extra/$domainname.conf
@@ -91,6 +91,30 @@ fi
 					sed -i '39s#ServerName dummy-host2.example.com#<FilesMatch "\.php$">#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '40s#ErrorLog "logs/dummy-host2.example.com-error_log"#SetHandler php-fpm#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '41s#CustomLog "logs/dummy-host2.example.com-access_log" common#</FilesMatch>#'  $source/httpd/conf/extra/$domainname.conf
+					for ((i=0;i<=5;i++))
+					do
+					       sed -i '45s/$/\n/' $source/httpd/conf/extra/$domainname.conf
+					done
+					sed -i '42s#</VirtualHost>#    RewriteEngine On/'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '43s/$/    RewriteCond %{HTTPS} off/'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '44s#$#    RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '45s#$#</VirtualHost>#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '46s#$#<VirtualHost *:443>#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '47s#$#DocumentRoot "'$document_root'"#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '48s#$#ServerName toandaica.vn:443#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '49s/$/SSLEngine on/'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '50s#$#SSLCertificateFile $source/httpd/ssl/'$domainname.crt'#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '51s#$#SSLCertificateKeyFile $source/httpd/ssl/'$domainname.key'#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '52s#$#CustomLog logs/ssl_request_log \\#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '53s#$# "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\"%r\\" %b"#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '54s#$#</VirtualHost>#'  $source/httpd/conf/extra/$domainname.conf
+					mkdir -p $source/httpd/ssl
+					openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout $domainname.key -out $domainname.crt
+					yum -y install mod_ssl
+					echo "LoadModule ssl_module $source/httpd/modules/mod_ssl.so" >> $source/httpd/conf/httpd.conf
+					#echo "LoadModule rewrite_module $source/httpd/modules/mod_rewrite.so" >> $source/httpd/conf/httpd.conf
+					#enable mod_rewrite
+					sed -i '117,152s/None/All/'  $source/httpd/conf/httpd.conf
 					$source/httpd/bin/httpd
 					netstat -ntpl
 				fi
