@@ -115,7 +115,7 @@ fi
 					./configure  --prefix=$source/httpd/ssl --enаble-ssl
 					make -j 2
 					make install
-					echo "LoadModule ssl_module '$source'/httpd/modules/mod_ssl.so" >> $source/httpd/conf/httpd.conf
+					echo "LoadModule ssl_module $source/httpd/modules/mod_ssl.so" >> $source/httpd/conf/httpd.conf
 					#echo "LoadModule rewrite_module $source/httpd/modules/mod_rewrite.so" >> $source/httpd/conf/httpd.conf
 					#enable mod_rewrite
 					sed -i '117,152s/None/All/'  $source/httpd/conf/httpd.conf
