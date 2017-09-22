@@ -111,6 +111,7 @@ fi
 					mkdir -p $source/httpd/ssl; openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
 					wget https://www.openssl.org/source/openssl-1.0.2l.tar.gz
 					tar -xvzf openssl-1.0.2l.tar.gz
+					cd openssl-1.0.21
 					./configure  --prefix=$source/httpd/ssl --enаble-ssl
 					make -j 2
 					make install
