@@ -91,11 +91,11 @@ fi
 					sed -i '39s#ServerName dummy-host2.example.com#<FilesMatch "\.php$">#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '40s#ErrorLog "logs/dummy-host2.example.com-error_log"#SetHandler php-fpm#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '41s#CustomLog "logs/dummy-host2.example.com-access_log" common#</FilesMatch>#'  $source/httpd/conf/extra/$domainname.conf
-					for ((i=0;i<=5;i++))
+					for ((i=0;i<=9;i++))
 					do
 					       sed -i '45s/$/\n/' $source/httpd/conf/extra/$domainname.conf
 					done
-					sed -i '42s#</VirtualHost>#    RewriteEngine On/'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '42s#</VirtualHost>#    RewriteEngine On#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '43s/$/    RewriteCond %{HTTPS} off/'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '44s#$#    RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '45s#$#</VirtualHost>#'  $source/httpd/conf/extra/$domainname.conf
@@ -103,15 +103,18 @@ fi
 					sed -i '47s#$#DocumentRoot "'$document_root'"#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '48s#$#ServerName toandaica.vn:443#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '49s/$/SSLEngine on/'  $source/httpd/conf/extra/$domainname.conf
-					sed -i '50s#$#SSLCertificateFile $source/httpd/ssl/'$domainname.crt'#'  $source/httpd/conf/extra/$domainname.conf
-					sed -i '51s#$#SSLCertificateKeyFile $source/httpd/ssl/'$domainname.key'#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '50s#$#SSLCertificateFile '$source'/httpd/ssl/'$domainname.crt'#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '51s#$#SSLCertificateKeyFile '$source'/httpd/ssl/'$domainname.key'#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '52s#$#CustomLog logs/ssl_request_log \\#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '53s#$# "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\"%r\\" %b"#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '54s#$#</VirtualHost>#'  $source/httpd/conf/extra/$domainname.conf
-					mkdir -p $source/httpd/ssl
-					openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout $domainname.key -out $domainname.crt
-					yum -y install mod_ssl
-					echo "LoadModule ssl_module $source/httpd/modules/mod_ssl.so" >> $source/httpd/conf/httpd.conf
+					mkdir -p $source/httpd/ssl; openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
+					wget https://www.openssl.org/source/openssl-1.0.2l.tar.gz
+					tar -xvzf openssl-1.0.2l.tar.gz
+					./configure  --prefix=$source/httpd/ssl --enаble-ssl
+					make -j 2
+					make install
+					echo "LoadModule ssl_module '$source'/httpd/modules/mod_ssl.so" >> $source/httpd/conf/httpd.conf
 					#echo "LoadModule rewrite_module $source/httpd/modules/mod_rewrite.so" >> $source/httpd/conf/httpd.conf
 					#enable mod_rewrite
 					sed -i '117,152s/None/All/'  $source/httpd/conf/httpd.conf
