@@ -43,7 +43,7 @@ fi
 			#Tao duong dan document root
         	mkdir -p $document_root
         	cd ..
-        	./configure --prefix=$source/httpd --enable-so --enable-deflate --enable-expires --enable-headers --enable-rewrite --with-included-apr --with-included-apr-util
+        	./configure --prefix=$source/httpd --enable-so --enable-deflate --enable-expires --enable-ssl --enable-headers --enable-rewrite --with-included-apr --with-included-apr-util
         	make -j 2
         	make install
         	sed -i 's/Listen 80/Listen '$port'/' $source/httpd/conf/httpd.conf
