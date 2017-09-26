@@ -90,9 +90,9 @@ fi
 					sed -i '36s#*:80>#RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '37s#ServerAdmin webmaster@dummy-host2.example.com#</VirtualHost>#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '38s#DocumentRoot "'$source'/httpd/docs/dummy-host2.example.com"#<VirtualHost *:443>#'  $source/httpd/conf/extra/$domainname.conf
-					sed -i '39s#ServerName dummy-host2.example.com#    DocumentRoot "'$document_root'"#'  $source/httpd/conf/extra/$domainname.conf
-					sed -i '40s#ErrorLog "logs/dummy-host2.example.com-error_log"#    ServerName '$domainname':443#'  $source/httpd/conf/extra/$domainname.conf
-					sed -i '41s#CustomLog "logs/dummy-host2.example.com-access_log" common#   FastCGIExternalServer '$source'/php/sbin/php-fpm -host 127.0.0.1:9000#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '39s#ServerName dummy-host2.example.com#DocumentRoot "'$document_root'"#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '40s#ErrorLog "logs/dummy-host2.example.com-error_log"#ServerName '$domainname':443#'  $source/httpd/conf/extra/$domainname.conf
+					sed -i '41s#CustomLog "logs/dummy-host2.example.com-access_log" common#FastCGIExternalServer '$source'/php/sbin/php-fpm -host 127.0.0.1:9000#'  $source/httpd/conf/extra/$domainname.conf
 					sed -i '42s#</VirtualHost>#    AddHandler php-fpm .php#'  $source/httpd/conf/extra/$domainname.conf
 					for ((i=0;i<=9;i++))
 					do
@@ -167,5 +167,5 @@ fi
             IF=`route | grep default | awk '{print $8}'`
             ip=`ip a | grep $IF | grep inet | awk '{print $2}' | cut -d / -f 1`
 			echo $ip
-            links $ip:$port/index.php
+            links $ip:$port
 	fi
