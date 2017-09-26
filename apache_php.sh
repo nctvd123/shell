@@ -167,5 +167,5 @@ fi
             IF=`route | grep default | awk '{print $8}'`
             ip=`ip a | grep $IF | grep inet | awk '{print $2}' | cut -d / -f 1`
 			echo $ip
-            links $ip:$port
+            links $ip
 	fi
