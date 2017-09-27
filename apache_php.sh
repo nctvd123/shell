@@ -62,6 +62,7 @@ fi
 				sed -i '151s/#LoadModule rewrite_module/LoadModule rewrite_module/' $source/httpd/conf/httpd.conf
 				sed -i '476s/#Include/Include/'  $source/httpd/conf/httpd.conf
 				sed -i '476s/httpd-vhosts/'$domainname'/'  $source/httpd/conf/httpd.conf
+				mv $source/httpd/conf/extra/httpd-vhosts.conf $source/httpd/conf/extra/$domainname.conf
 				echo "ProxyPassMatch ^/(.*\\.php(/.*)?)$ fcgi://127.0.0.1:9000'$document_root'/$1" >> $source/httpd/conf/httpd.conf
 				sed -i '116s/#LoadModule proxy_module modules\/mod_proxy.so/LoadModule proxy_module modules\/mod_proxy.so/'  $source/httpd/conf/httpd.conf
 				sed -i '120s/#LoadModule proxy_fcgi_module modules\/mod_proxy_fcgi.so/LoadModule proxy_fcgi_module modules\/mod_proxy_fcgi.so/'  $source/httpd/conf/httpd.conf
