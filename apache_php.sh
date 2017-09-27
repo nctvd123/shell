@@ -52,14 +52,16 @@ fi
         	sed -i 's/#ServerName/ServerName/' $source/httpd/conf/httpd.conf
         	sed -i 's#www.example.com:80#'$domainname'#' $source/httpd/conf/httpd.conf
         	sed -i 's#'$source'/httpd/htdocs#'$document_root'#' $source/httpd/conf/httpd.conf
-		sed -i '53s/$/Listen 443/' $source/httpd/conf/httpd.conf 
-		sed -i '132s/#LoadModule ssl_module/LoadModule ssl_module/' $source/httpd/conf/httpd.conf
-		sed -i '151s/#LoadModule rewrite_module/LoadModule rewrite_module/' $source/httpd/conf/httpd.conf
         	echo "qua trinh cai dat da xong, bat dau qua trinh khoi dong apache:"
         	n=`echo $version_apache | cut -d . -f 1,2`
         	if [ $n == httpd-2.4 ]; then
 				#phien ban 2.4
 				echo "cau hinh apache-2.4 chay php:"
+				sed -i '53s/$/Listen 443/' $source/httpd/conf/httpd.conf 
+				sed -i '132s/#LoadModule ssl_module/LoadModule ssl_module/' $source/httpd/conf/httpd.conf
+				sed -i '151s/#LoadModule rewrite_module/LoadModule rewrite_module/' $source/httpd/conf/httpd.conf
+				sed -i '476s/#Include/Include/'  $source/httpd/conf/httpd.conf
+				sed -i '476s/httpd-vhosts/'$domainname'/'  $source/httpd/conf/httpd.conf
 				echo "ProxyPassMatch ^/(.*\\.php(/.*)?)$ fcgi://127.0.0.1:9000'$document_root'/$1" >> $source/httpd/conf/httpd.conf
 				sed -i '116s/#LoadModule proxy_module modules\/mod_proxy.so/LoadModule proxy_module modules\/mod_proxy.so/'  $source/httpd/conf/httpd.conf
 				sed -i '120s/#LoadModule proxy_fcgi_module modules\/mod_proxy_fcgi.so/LoadModule proxy_fcgi_module modules\/mod_proxy_fcgi.so/'  $source/httpd/conf/httpd.conf
