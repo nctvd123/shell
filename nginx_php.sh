@@ -32,15 +32,45 @@ fi
 		mkdir -p $document_root
         	tar -xvzf $version_nginx.tar.gz
         	cd $version_nginx
-        	./configure --prefix=$source/nginx/ --with-file-aio --with-http_mp4_module --with-http_flv_module --with-http_secure_link_module --with-http_realip_module --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --without-http_ssi_module --without-http_scgi_module --without-http_uwsgi_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_image_filter_module
+        	./configure --prefix=$source/nginx/ --with-file-aio --with-http_mp4_module --with-http_flv_module --with-http_secure_link_module --with-http_realip_module --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --without-http_ssi_module --without-http_scgi_module --without-http_uwsgi_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_image_filter_module--with-http_ssl_module --with-http_rewrite_module
         	make -j 2
         	make install 
         	echo "qua trinh cai dat da xong, bat dau qua trinh khoi dong nginx:"
-		sed -i '20s#$#   include'
+		mkdir -p $source/nginx/conf/conf.d
+		touch $source/nginx/conf/conf.d/$domainname.conf
+		sed -i '20s#$#   include $source/nginx/conf/conf.d/*.conf;#' $source/nginx/conf/nginx.conf
 		sed -i '36s/80/'$port'/' $source/nginx/conf/nginx.conf
 		sed -i '37s/localhost/'$domainname'/' $source/nginx/conf/nginx.conf
 		sed -i '66s/#    root           html;/    root           html;/' $source/nginx/conf/nginx.conf
 		sed -i '66s#html#'$document_root'#' $source/nginx/conf/nginx.conf
+		#cau hinh ssl
+		echo "server {" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    listen       80;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    server_name  $domainname;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    rewrite  ^/(.*) https://'$domainname'/$1 permanent;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "}" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "server {" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    listen      443;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    ssl on;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    ssl_certificate $source/ssl/$domainname.crt;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    ssl_certificate_key $source/ssl/$domainname.key;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    access_log $source/nginx/logs/$domainname.access.log;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    error_log $source/nginx/logs/$domainname.error.log;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    location / {" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "        root         $document_root;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "        index index.php index.html index.htm;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "        try_files $uri $uri/ /index.php?$uri&$args;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    }" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "        error_page 404 /404.html;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "        location = /40x.html {" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "        error_page 500 502 503 504 /50x.html;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "        location = /50x.html {" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    }" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "}" >> $source/nginx/conf/conf.d/$domainname.conf
+		#cai dat ssl
+		mkdir -p $source/ssl
+		cd $source/ssl
+		openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
 		echo "cau hinh nginx chay php:"
 		sed -i 's/#user  nobody;/user  nginx;/' $source/nginx/conf/nginx.conf
 		so_process=`cat /proc/cpuinfo |grep processor |wc -l`
