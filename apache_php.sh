@@ -52,6 +52,9 @@ fi
         	sed -i 's/#ServerName/ServerName/' $source/httpd/conf/httpd.conf
         	sed -i 's#www.example.com:80#'$domainname'#' $source/httpd/conf/httpd.conf
         	sed -i 's#'$source'/httpd/htdocs#'$document_root'#' $source/httpd/conf/httpd.conf
+		sed -i 's#$#Listen 443#' $source/httpd/conf/httpd.conf 
+		sed -i '132s/#LoadModule ssl_module/LoadModule ssl_module/' $source/httpd/conf/httpd.conf
+		sed -i '151s/#LoadModule rewrite_module/LoadModule rewrite_module/' $source/httpd/conf/httpd.conf
         	echo "qua trinh cai dat da xong, bat dau qua trinh khoi dong apache:"
         	n=`echo $version_apache | cut -d . -f 1,2`
         	if [ $n == httpd-2.4 ]; then
@@ -61,6 +64,35 @@ fi
 				sed -i '116s/#LoadModule proxy_module modules\/mod_proxy.so/LoadModule proxy_module modules\/mod_proxy.so/'  $source/httpd/conf/httpd.conf
 				sed -i '120s/#LoadModule proxy_fcgi_module modules\/mod_proxy_fcgi.so/LoadModule proxy_fcgi_module modules\/mod_proxy_fcgi.so/'  $source/httpd/conf/httpd.conf
 				sed -i '251s/index.html/index.php index.html/'  $source/httpd/conf/httpd.conf
+				sed -i '23s/80/'$port'/'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '25s#'$source'/httpd/docs/dummy-host.example.com#'$document_root'#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '26,29s/dummy-host.example.com/'$domainname'/'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '30s#</VirtualHost>#    RewriteEngine On#' $source/httpd/conf/extra/$domainname.conf
+				sed -i '31s#$#    RewriteCond %{HTTPS} off#' $source/httpd/conf/extra/$domainname.conf
+				sed -i '32s#<VirtualHost #    #'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '32s#*:80>#RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '33s#ServerAdmin webmaster@dummy-host2.example.com#</VirtualHost>#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '34s#DocumentRoot "'$source'/httpd/docs/dummy-host2.example.com"#<VirtualHost *:443>#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '35s#ServerName dummy-host2.example.com#DocumentRoot "'$document_root'"#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '36s#ErrorLog "logs/dummy-host2.example.com-error_log"#ServerName '$domainname':443#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '37s#CustomLog "logs/dummy-host2.example.com-access_log" common#FastCGIExternalServer '$source'/php/sbin/php-fpm -host 127.0.0.1:9000#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '38s#</VirtualHost>#    AddHandler php-fpm .php#'  $source/httpd/conf/extra/$domainname.conf
+				for ((i=0;i<=9;i++))
+				do
+					       sed -i '39s/$/\n/' $source/httpd/conf/extra/$domainname.conf
+				done
+				sed -i '39s#$#    Action php-fpm \/php.fcgi#'  $source/httpd/conf/extra/$domainname.conf	
+				sed -i '40s#$#    Alias /php.fcgi '$source'/php/sbin/php-fpm#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '41s#$#    DirectoryIndex index.php index.html#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '42s#$#    <FilesMatch "\.php$">#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '43s#$#    SetHandler php-fpm#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '44s#$#    </FilesMatch>#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '45s#$#    SSLEngine on#' $source/httpd/conf/extra/$domainname.conf
+				sed -i '46s#$#    SSLCertificateFile '$source'/httpd/ssl/'$domainname.crt'#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '47s#$#    SSLCertificateKeyFile '$source'/httpd/ssl/'$domainname.key'#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '48s#$#    CustomLog logs/ssl_request_log \\#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '49s#$#    "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\"%r\\" %b"#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '50s#$#</VirtualHost>#'  $source/httpd/conf/extra/$domainname.conf
 				$source/httpd/bin/apachectl
 			else
 				#phien ban 2.2
