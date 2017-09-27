@@ -36,6 +36,7 @@ fi
         	make -j 2
         	make install 
         	echo "qua trinh cai dat da xong, bat dau qua trinh khoi dong nginx:"
+		sed -i '20s#$#   include'
 		sed -i '36s/80/'$port'/' $source/nginx/conf/nginx.conf
 		sed -i '37s/localhost/'$domainname'/' $source/nginx/conf/nginx.conf
 		sed -i '66s/#    root           html;/    root           html;/' $source/nginx/conf/nginx.conf
