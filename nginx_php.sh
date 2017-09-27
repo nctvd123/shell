@@ -47,7 +47,7 @@ fi
 		echo "server {" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "    listen       80;" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "    server_name  $domainname;" >> $source/nginx/conf/conf.d/$domainname.conf
-		echo "    rewrite  ^/(.*) https://'$domainname'/$1 permanent;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    rewrite  ^/(.*) https://$domainname/$1 permanent;" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "}" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "server {" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "    listen      443;" >> $source/nginx/conf/conf.d/$domainname.conf
