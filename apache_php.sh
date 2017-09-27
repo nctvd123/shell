@@ -52,7 +52,7 @@ fi
         	sed -i 's/#ServerName/ServerName/' $source/httpd/conf/httpd.conf
         	sed -i 's#www.example.com:80#'$domainname'#' $source/httpd/conf/httpd.conf
         	sed -i 's#'$source'/httpd/htdocs#'$document_root'#' $source/httpd/conf/httpd.conf
-		sed -i 's#$#Listen 443#' $source/httpd/conf/httpd.conf 
+		sed -i '53s/$/Listen 443/' $source/httpd/conf/httpd.conf 
 		sed -i '132s/#LoadModule ssl_module/LoadModule ssl_module/' $source/httpd/conf/httpd.conf
 		sed -i '151s/#LoadModule rewrite_module/LoadModule rewrite_module/' $source/httpd/conf/httpd.conf
         	echo "qua trinh cai dat da xong, bat dau qua trinh khoi dong apache:"
