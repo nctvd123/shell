@@ -38,7 +38,7 @@ fi
         	echo "qua trinh cai dat da xong, bat dau qua trinh khoi dong nginx:"
 		mkdir -p $source/nginx/conf/conf.d
 		touch $source/nginx/conf/conf.d/$domainname.conf
-		sed -i '20s#$#   include $source/nginx/conf/conf.d/*.conf;#' $source/nginx/conf/nginx.conf
+		sed -i '20s#$#   include '$source'/nginx/conf/conf.d/*.conf;#' $source/nginx/conf/nginx.conf
 		sed -i '36s/80/'$port'/' $source/nginx/conf/nginx.conf
 		sed -i '37s/localhost/'$domainname'/' $source/nginx/conf/nginx.conf
 		sed -i '66s/#    root           html;/    root           html;/' $source/nginx/conf/nginx.conf
@@ -63,6 +63,7 @@ fi
 		echo "    }" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "        error_page 404 /404.html;" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "        location = /40x.html {" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    }" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "        error_page 500 502 503 504 /50x.html;" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "        location = /50x.html {" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "    }" >> $source/nginx/conf/conf.d/$domainname.conf
