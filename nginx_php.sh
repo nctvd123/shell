@@ -39,10 +39,28 @@ fi
 		mkdir -p $source/nginx/conf/conf.d
 		touch $source/nginx/conf/conf.d/$domainname.conf
 		sed -i '20s#$#   include '$source'/nginx/conf/conf.d/*.conf;#' $source/nginx/conf/nginx.conf
-		sed -i '36s/80/'$port'/' $source/nginx/conf/nginx.conf
-		sed -i '37s/localhost/'$domainname'/' $source/nginx/conf/nginx.conf
-		sed -i '66s/#    root           html;/    root           html;/' $source/nginx/conf/nginx.conf
-		sed -i '66s#html#'$document_root'#' $source/nginx/conf/nginx.conf
+		sed -i '35s/    server {/    #server {/' $source/nginx/conf/nginx.conf
+		sed -i '36s/listen/#listen/' $source/nginx/conf/nginx.conf
+		sed -i '37s/server_name/#server_name/' $source/nginx/conf/nginx.conf
+		sed -i '43s/location/#location/' $source/nginx/conf/nginx.conf
+		sed -i '44s/root/#root/' $source/nginx/conf/nginx.conf
+		sed -i '45s/index/#index/' $source/nginx/conf/nginx.conf
+		sed -i '46s/}/#}/' $source/nginx/conf/nginx.conf
+		sed -i '52s/error_page/#error_page/' $source/nginx/conf/nginx.conf
+		sed -i '53s/location/#location/' $source/nginx/conf/nginx.conf
+		sed -i '54s/root/#root/' $source/nginx/conf/nginx.conf
+		sed -i '55s/}/#}/' $source/nginx/conf/nginx.conf
+		sed -i '79s/}/#}/' $source/nginx/conf/nginx.conf
+		echo "cau hinh nginx chay php:"
+		sed -i 's/#user  nobody;/user  nginx;/' $source/nginx/conf/nginx.conf
+		so_process=`cat /proc/cpuinfo |grep processor |wc -l`
+		sed -i 's/worker_processes  1;/worker_processes  '$so_process';/' $source/nginx/conf/nginx.conf
+		sed -i 's/#error_log  logs\/error.log;/error_log  logs\/error.log;/' $source/nginx/conf/nginx.conf
+		sed -i 's/#pid        logs\/nginx.pid;/pid        logs\/nginx.pid;/' $source/nginx/conf/nginx.conf
+		sed -i 's/#gzip  on;/gzip  on;/' $source/nginx/conf/nginx.conf
+		sed -i '21s/#log_format/log_format/' $source/nginx/conf/nginx.conf
+		sed -i '22s/#                  '/                  '/' $source/nginx/conf/nginx.conf
+		sed -i '23s/#                  '/                  '/' $source/nginx/conf/nginx.conf
 		#cau hinh ssl
 		echo "server {" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "    listen       80;" >> $source/nginx/conf/conf.d/$domainname.conf
@@ -58,8 +76,14 @@ fi
 		echo "    error_log $source/nginx/logs/$domainname.error.log;" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "    location / {" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "        root         $document_root;" >> $source/nginx/conf/conf.d/$domainname.conf
-		echo "        index index.php index.html index.htm;" >> $source/nginx/conf/conf.d/$domainname.conf
-		echo "        try_files $uri $uri/ /index.php?$uri&$args;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "        index  index.html index.htm;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    }" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    location ~  \.php$ {" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    root           $document_root;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    fastcgi_pass   127.0.0.1:9000;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    fastcgi_index  index.php;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    include        fastcgi_params;" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "    }" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "        error_page 404 /404.html;" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "        location = /40x.html {" >> $source/nginx/conf/conf.d/$domainname.conf
@@ -72,19 +96,6 @@ fi
 		mkdir -p $source/ssl
 		cd $source/ssl
 		openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
-		echo "cau hinh nginx chay php:"
-		sed -i 's/#user  nobody;/user  nginx;/' $source/nginx/conf/nginx.conf
-		so_process=`cat /proc/cpuinfo |grep processor |wc -l`
-		sed -i 's/worker_processes  1;/worker_processes  '$so_process';/' $source/nginx/conf/nginx.conf
-		sed -i 's/#error_log  logs\/error.log;/error_log  logs\/error.log;/' $source/nginx/conf/nginx.conf
-		sed -i 's/#pid        logs\/nginx.pid;/pid        logs\/nginx.pid;/' $source/nginx/conf/nginx.conf
-		sed -i 's/#gzip  on;/gzip  on;/' $source/nginx/conf/nginx.conf
-		sed -i '65,71s/#location ~ /location ~  /' $source/nginx/conf/nginx.conf
-		sed -i '67s/#    fastcgi_pass   127.0.0.1:9000;/    fastcgi_pass   127.0.0.1:9000;/' $source/nginx/conf/nginx.conf
-		sed -i '68s/#    fastcgi_index  index.php;/    fastcgi_index  index.php;/' $source/nginx/conf/nginx.conf
-		sed -i '69s/#    fastcgi_param  SCRIPT_FILENAME  \/scripts$fastcgi_script_name;/    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;/' $source/nginx/conf/nginx.conf
-		sed -i '70s/#    include        fastcgi_params;/    include        fastcgi_params;/' $source/nginx/conf/nginx.conf
-		sed -i '65,71s/#}/}/' $source/nginx/conf/nginx.conf
         	$source/nginx/sbin/nginx
 		netstat -ntpl
 		#Cai dat php-fpm
