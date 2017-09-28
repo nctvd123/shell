@@ -144,6 +144,7 @@ fi
         	#Tao file index de test
         	touch $document_root/index.php
 		touch $document_root/index.html
+		echo "toandaica" >> $document_root/index.html
         	echo "<?php phpinfo(); ?>" >> $document_root/index.php
 		$source/php/sbin/php-fpm
 		IF=`route | grep default | awk '{print $8}'`
