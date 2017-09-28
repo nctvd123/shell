@@ -63,7 +63,7 @@ fi
 				sed -i '476s/#Include/Include/'  $source/httpd/conf/httpd.conf
 				sed -i '476s/httpd-vhosts/'$domainname'/'  $source/httpd/conf/httpd.conf
 				mv $source/httpd/conf/extra/httpd-vhosts.conf $source/httpd/conf/extra/$domainname.conf
-				echo "ProxyPassMatch ^/(.*\\.php(/.*)?)$ fcgi://127.0.0.1:9000'$document_root'/$1" >> $source/httpd/conf/httpd.conf
+				echo "ProxyPassMatch ^/(.*\\.php(/.*)?)$ fcgi://127.0.0.1:9000$document_root/$1" >> $source/httpd/conf/httpd.conf
 				sed -i '116s/#LoadModule proxy_module modules\/mod_proxy.so/LoadModule proxy_module modules\/mod_proxy.so/'  $source/httpd/conf/httpd.conf
 				sed -i '120s/#LoadModule proxy_fcgi_module modules\/mod_proxy_fcgi.so/LoadModule proxy_fcgi_module modules\/mod_proxy_fcgi.so/'  $source/httpd/conf/httpd.conf
 				sed -i '251s/index.html/index.php index.html/'  $source/httpd/conf/httpd.conf
@@ -78,24 +78,17 @@ fi
 				sed -i '34s#DocumentRoot "'$source'/httpd/docs/dummy-host2.example.com"#<VirtualHost *:443>#'  $source/httpd/conf/extra/$domainname.conf
 				sed -i '35s#ServerName dummy-host2.example.com#DocumentRoot "'$document_root'"#'  $source/httpd/conf/extra/$domainname.conf
 				sed -i '36s#ErrorLog "logs/dummy-host2.example.com-error_log"#ServerName '$domainname':443#'  $source/httpd/conf/extra/$domainname.conf
-				sed -i '37s#CustomLog "logs/dummy-host2.example.com-access_log" common#FastCGIExternalServer '$source'/php/sbin/php-fpm -host 127.0.0.1:9000#'  $source/httpd/conf/extra/$domainname.conf
-				sed -i '38s#</VirtualHost>#    AddHandler php-fpm .php#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '37s#CustomLog "logs/dummy-host2.example.com-access_log" common#    DirectoryIndex index.php index.html#'$source'/php/sbin/php-fpm -host 127.0.0.1:9000#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '38s#</VirtualHost>#    SSLEngine on#'  $source/httpd/conf/extra/$domainname.conf
 				for ((i=0;i<=9;i++))
 				do
 					       sed -i '39s/$/\n/' $source/httpd/conf/extra/$domainname.conf
 				done
-				sed -i '39s#$#    Action php-fpm \/php.fcgi#'  $source/httpd/conf/extra/$domainname.conf	
-				sed -i '40s#$#    Alias /php.fcgi '$source'/php/sbin/php-fpm#'  $source/httpd/conf/extra/$domainname.conf
-				sed -i '41s#$#    DirectoryIndex index.php index.html#'  $source/httpd/conf/extra/$domainname.conf
-				sed -i '42s#$#    <FilesMatch "\.php$">#'  $source/httpd/conf/extra/$domainname.conf
-				sed -i '43s#$#    SetHandler php-fpm#'  $source/httpd/conf/extra/$domainname.conf
-				sed -i '44s#$#    </FilesMatch>#'  $source/httpd/conf/extra/$domainname.conf
-				sed -i '45s#$#    SSLEngine on#' $source/httpd/conf/extra/$domainname.conf
-				sed -i '46s#$#    SSLCertificateFile '$source'/httpd/ssl/'$domainname.crt'#'  $source/httpd/conf/extra/$domainname.conf
-				sed -i '47s#$#    SSLCertificateKeyFile '$source'/httpd/ssl/'$domainname.key'#'  $source/httpd/conf/extra/$domainname.conf
-				sed -i '48s#$#    CustomLog logs/ssl_request_log \\#'  $source/httpd/conf/extra/$domainname.conf
-				sed -i '49s#$#    "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\"%r\\" %b"#'  $source/httpd/conf/extra/$domainname.conf
-				sed -i '50s#$#</VirtualHost>#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '39s#$#    SSLCertificateFile '$source'/httpd/ssl/'$domainname.crt'#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '40s#$#    SSLCertificateKeyFile '$source'/httpd/ssl/'$domainname.key'#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '41s#$#    CustomLog logs/ssl_request_log \\#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '42s#$#    "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\"%r\\" %b"#'  $source/httpd/conf/extra/$domainname.conf
+				sed -i '43s#$#</VirtualHost>#'  $source/httpd/conf/extra/$domainname.conf
 				$source/httpd/bin/apachectl
 			else
 				#phien ban 2.2
@@ -147,7 +140,6 @@ fi
 					sed -i '54s#$#</VirtualHost>#'  $source/httpd/conf/extra/$domainname.conf
 					mkdir -p $source/httpd/ssl 
 					cd $source/httpd/ssl
-					openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
 					sed -i '117,152s/None/All/'  $source/httpd/conf/httpd.conf
 					$source/httpd/bin/httpd
 					netstat -ntpl
@@ -195,6 +187,7 @@ fi
         		fi
             netstat -ntpl
             #Tao file index de test
+	    openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
             touch $document_root/index.php
 	    touch $document_root/index.html
             echo "<?php phpinfo(); ?>" >> $document_root/index.php
