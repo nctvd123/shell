@@ -89,6 +89,9 @@ fi
 				sed -i '41s#$#    CustomLog logs/ssl_request_log \\#'  $source/httpd/conf/extra/$domainname.conf
 				sed -i '42s#$#    "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\"%r\\" %b"#'  $source/httpd/conf/extra/$domainname.conf
 				sed -i '43s#$#</VirtualHost>#'  $source/httpd/conf/extra/$domainname.conf
+				mkdir -p $source/httpd/ssl
+				cd $source/httpd/ssl
+				openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
 				$source/httpd/bin/apachectl
 			else
 				#phien ban 2.2
@@ -140,6 +143,7 @@ fi
 					sed -i '54s#$#</VirtualHost>#'  $source/httpd/conf/extra/$domainname.conf
 					mkdir -p $source/httpd/ssl 
 					cd $source/httpd/ssl
+					openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
 					sed -i '117,152s/None/All/'  $source/httpd/conf/httpd.conf
 					$source/httpd/bin/httpd
 					netstat -ntpl
@@ -187,7 +191,6 @@ fi
         		fi
             netstat -ntpl
             #Tao file index de test
-	    openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
             touch $document_root/index.php
 	    touch $document_root/index.html
             echo "<?php phpinfo(); ?>" >> $document_root/index.php
