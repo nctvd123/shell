@@ -19,7 +19,7 @@ fi
 	#Kiem tra cac phien ban moi nhat
 	wget https://httpd.apache.org/download.cgi
 	grep "Source:" download.cgi
-	echo -n "MOI BAN NHAP PHIEN BAN APACHE MOI NHAT O TREN THEO DANG httpd-2.4.27:"; read version_apache
+	#echo -n "MOI BAN NHAP PHIEN BAN APACHE MOI NHAT O TREN THEO DANG httpd-2.4.27:"; read version_apache
 	wget http://mirror.downloadvn.com/apache//httpd/$version_apache.tar.gz
 	if [ "$?" != 0 ] && [ -d $path_shell ] && [ ];then
         	echo "Error download "
@@ -28,19 +28,19 @@ fi
         	cd $version_apache/srclib
         	wget https://apr.apache.org/download.cgi
         	grep "http://mirrors.viethosting.com/apache//apr/" download.cgi
-        	echo -n "MOI BAN NHAP PHIEN BAN APR MOI NHAT O TREN THEO DANG apr-1.6.2 :"; read version_apr
-        	echo -n "MOI BAN NHAP PHIEN BAN APR MOI NHAT O TREN THEO DANG apr-util-1.6.0 :";read version_apr_util
+        	#echo -n "MOI BAN NHAP PHIEN BAN APR MOI NHAT O TREN THEO DANG apr-1.6.2 :"; read version_apr
+        	#echo -n "MOI BAN NHAP PHIEN BAN APR MOI NHAT O TREN THEO DANG apr-util-1.6.0 :";read version_apr_util
         	wget http://mirror.downloadvn.com/apache//apr/$version_apr.tar.gz
         	wget http://mirror.downloadvn.com/apache//apr/$version_apr_util.tar.gz
         	tar -xvzf $version_apr.tar.gz
         	mv $version_apr apr
-			tar -xvzf $version_apr_util.tar.gz
+		tar -xvzf $version_apr_util.tar.gz
         	mv $version_apr_util apr-util
         	echo -n "Nhap duong dan chua file cai dat apache,php:"; read source
         	echo -n "Nhap thong so domainname: "; read domainname
         	echo -n "Nhap thong so port:";read port
         	echo -n "Nhap thong so document_root:";read document_root
-			#Tao duong dan document root
+		#Tao duong dan document root
         	mkdir -p $document_root
 		cd ..
         	./configure --prefix=$source/httpd --enable-so --enable-deflate --enable-expires --enable-ssl --enable-headers --enable-rewrite --with-included-apr --with-included-apr-util
