@@ -196,8 +196,10 @@ fi
             netstat -ntpl
             #Tao file index de test
             touch $document_root/index.php
+	    touch $document_root/index.html
             echo "<?php phpinfo(); ?>" >> $document_root/index.php
-			chown -R apache:apache $document_root
+	    echo "toandaica" >> $document_root/index.html
+	    chown -R apache:apache $document_root
             $source/php/sbin/php-fpm
             IF=`route | grep default | awk '{print $8}'`
             ip=`ip a | grep $IF | grep inet | awk '{print $2}' | cut -d / -f 1`
