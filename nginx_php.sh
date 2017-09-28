@@ -140,6 +140,7 @@ fi
 		fi
 		#Tao duong dan document root
  		mkdir -p $document_root
+		chown -R nginx:nginx $document_root
         	netstat -ntpl
         	#Tao file index de test
         	touch $document_root/index.php
