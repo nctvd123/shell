@@ -42,6 +42,7 @@ fi
         	echo -n "Nhap thong so document_root:";read document_root
 			#Tao duong dan document root
         	mkdir -p $document_root
+		cd ..
         	./configure --prefix=$source/httpd --enable-so --enable-deflate --enable-expires --enable-ssl --enable-headers --enable-rewrite --with-included-apr --with-included-apr-util
         	make -j 2
         	make install
