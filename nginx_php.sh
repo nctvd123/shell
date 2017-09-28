@@ -82,7 +82,7 @@ fi
 		echo "    root           $document_root;" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "    fastcgi_pass   127.0.0.1:9000;" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "    fastcgi_index  index.php;" >> $source/nginx/conf/conf.d/$domainname.conf
-		echo "    fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;" >> $source/nginx/conf/conf.d/$domainname.conf
+		echo "    fastcgi_param  SCRIPT_FILENAME  $document_root/$fastcgi_script_name;" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "    include        fastcgi_params;" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "    }" >> $source/nginx/conf/conf.d/$domainname.conf
 		echo "        error_page 404 /404.html;" >> $source/nginx/conf/conf.d/$domainname.conf
