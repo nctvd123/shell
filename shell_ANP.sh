@@ -14,8 +14,7 @@ do
 	echo "CAI DAT APACHE"	
 	mv apache.sh $path_shell
 	cd $path_shell
-	chmod +x apache.sh
-	./apache.sh
+	apache $version_apache $version_apr $version_apr_util $source $domainname $port $document_root
 	break
 done
 while [ $n -eq 2 ]
