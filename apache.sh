@@ -32,6 +32,10 @@ fi
 		link_apr_util=`curl -L https://apr.apache.org/download.cgi | grep tar.gz | grep 'apr-util-1' | grep -v "MD5\|PGP\|SHA1\|SHA256" | awk -F '"' '{print $2}'`
 		version_apr_util=`echo $link_apr_util| rev| cut -d'/' -f1 | rev`
 		wget $link_apr_util
+		tar -xvzf $version_apr
+                tar -xvzf $version_apr_util
+                mv apr-1-6.2 apr
+                mv apr-util-1-6.0 apr-util
 		#Tao duong dan document root
         	mkdir -p $4
 		cd ..
