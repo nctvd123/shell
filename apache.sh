@@ -18,7 +18,8 @@ fi
 	yum -y install apr-devel apr-util-devel gcc pcre-devel.x86_64 zlib-devel openssl-devel wget vim links
 	cd $path_down
 	#Kiem tra cac phien ban moi nhat
-	version_apache=`curl -L https://httpd.apache.org/download.cgi | grep tar.gz | grep 'httpd-2.4' | grep -v "MD5\|PGP\|SHA1\|SHA256" | awk -F '"' '{print $2}'` 
+	link_apache=`curl -L https://httpd.apache.org/download.cgi | grep tar.gz | grep 'httpd-2.4' | grep -v "MD5\|PGP\|SHA1\|SHA256" | awk -F '"' '{print $2}'` 
+	version_apache=`echo $link_apache| rev| cut -d'/' -f1 | rev`
 	link_download_apache=$link_apache
 	wget $link_download_apache
 	if [ "$?" != 0 ] && [ -d $path_shell ] && [ ];then
@@ -34,8 +35,8 @@ fi
 		wget $link_apr_util
 		tar -xvzf $version_apr
                 tar -xvzf $version_apr_util
-                mv apr-1-6.2 apr
-                mv apr-util-1-6.0 apr-util
+                mv apr-1.6.2 apr
+                mv apr-util-1.6.0 apr-util
 		#Tao duong dan document root
         	mkdir -p $4
 		cd ..
