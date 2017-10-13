@@ -88,9 +88,6 @@ fi
 				sed -i '43s#$#</VirtualHost>#'  $1/httpd/conf/extra/$2.conf
 				$1/httpd/bin/apachectl
 				netstat -ntpl
-				touch $4/index.html
-	    			echo "toandaica" >> $4/index.html
-	    			chown -R apache:apache $4
 			else
 				#phien ban 2.2
 				echo "cau hinh apache-2.2 chay php:"
