@@ -208,3 +208,6 @@ fi
             links $ip
 	fi
 }
+# Invoke your function
+echo "Nhap 1 trong cac du lieu sau day: source, domainname, port, document_root"
+apache_php $1 $2 $3 $4
