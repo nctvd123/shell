@@ -90,6 +90,14 @@ fi
 				cd $1/httpd/ssl
 				openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
 				$1/httpd/bin/apachectl
+				touch $4/index.html
+	    			echo "toandaica" >> $4/index.html
+	    			chown -R apache:apache $4
+            			$1/php/sbin/php-fpm
+            			IF=`route | grep default | awk '{print $8}'`
+            			ip=`ip a | grep $IF | grep inet | awk '{print $2}' | cut -d / -f 1`
+				echo $ip
+            			links $ip
 			else
 				#phien ban 2.2
 				echo "cau hinh apache-2.2 chay php:"
