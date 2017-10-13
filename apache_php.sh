@@ -86,9 +86,6 @@ fi
 				sed -i '41s#$#    CustomLog logs/ssl_request_log \\#'  $1/httpd/conf/extra/$2.conf
 				sed -i '42s#$#    "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\"%r\\" %b"#'  $1/httpd/conf/extra/$2.conf
 				sed -i '43s#$#</VirtualHost>#'  $1/httpd/conf/extra/$2.conf
-				mkdir -p $1/httpd/ssl
-				cd $1/httpd/ssl
-				openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
 				$1/httpd/bin/apachectl
 				netstat -ntpl
 				touch $4/index.html
@@ -147,9 +144,6 @@ fi
 					sed -i '52s#$#    CustomLog logs/ssl_request_log \\#'  $1/httpd/conf/extra/$2.conf
 					sed -i '53s#$#    "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \\"%r\\" %b"#'  $1/httpd/conf/extra/$2.conf
 					sed -i '54s#$#</VirtualHost>#'  $1/httpd/conf/extra/$2.conf
-					mkdir -p $1/httpd/ssl 
-					cd $1/httpd/ssl
-					openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
 					sed -i '117,152s/None/All/'  $1/httpd/conf/httpd.conf
 					$1/httpd/bin/httpd
 					netstat -ntpl
@@ -188,12 +182,15 @@ fi
                         cp php-fpm.conf.default php-fpm.conf
                         sed -i -e "s/;pid = /pid = /" $1/php/etc/php-fpm.conf
                         sed -i -e "s/;error_log = /error_log = /" $1/php/etc/php-fpm.conf
-                        cp $source/php/etc/php-fpm.d/www.conf.default $1/php/etc/php-fpm.d/www.conf
+                        cp $1/php/etc/php-fpm.d/www.conf.default $1/php/etc/php-fpm.d/www.conf
                         sed -i -e "s/user = nobody/user = apache/" $1/php/etc/php-fpm.d/www.conf
                         sed -i -e "s/group = nobody/group = apache/" $1/php/etc/php-fpm.d/www.conf
                         sed -i -e "s/;listen.allowed_clients = 127.0.0.1/listen.allowed_clients = 127.0.0.1/" $1/php/etc/php-fpm.d/www.conf
                 	fi
         		fi
+	    mkdir -p $1/httpd/ssl
+	    cd $1/httpd/ssl
+	    openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
             netstat -ntpl
             #Tao file index de test
             touch $4/index.php
