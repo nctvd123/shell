@@ -60,7 +60,7 @@ fi
 				sed -i '476s/#Include/Include/'  $1/httpd/conf/httpd.conf
 				sed -i '476s/httpd-vhosts/'$2'/'  $1/httpd/conf/httpd.conf
 				mv $1/httpd/conf/extra/httpd-vhosts.conf $1/httpd/conf/extra/$2.conf
-				echo "ProxyPassMatch ^/(.*\\.php(/.*)?)$ fcgi://127.0.0.1:9000$4/"$1"" >> $1/httpd/conf/httpd.conf
+				echo "ProxyPassMatch ^/(.*\\.php(/.*)?)$ fcgi://127.0.0.1:9000$4/`$1`" >> $1/httpd/conf/httpd.conf
 				sed -i '116s/#LoadModule proxy_module modules\/mod_proxy.so/LoadModule proxy_module modules\/mod_proxy.so/'  $1/httpd/conf/httpd.conf
 				sed -i '120s/#LoadModule proxy_fcgi_module modules\/mod_proxy_fcgi.so/LoadModule proxy_fcgi_module modules\/mod_proxy_fcgi.so/'  $1/httpd/conf/httpd.conf
 				sed -i '251s/index.html/index.php index.html/'  $1/httpd/conf/httpd.conf
