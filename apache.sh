@@ -158,6 +158,10 @@ fi
 		fi
 	}
 # Invoke your function
-echo "Nhap 1 trong cac du lieu sau day: source, domainname, port, document_root"
-apache $version_apache $version_apr $version_apr_util $1 $2 $3 $4
+echo "Nhap cac du lieu sau day de chay shell: source, domainname, port, document_root"
+echo -n "Nhap source:";read $1
+echo -n "Nhap domainame:";read $2
+echo -n "Nhap port:";read $3
+echo -n "Nhap document_root:";read $4
+apache $1 $2 $3 $4
 
