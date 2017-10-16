@@ -158,6 +158,6 @@ fi
 		fi
 	}
 # Invoke your function
-echo "Nhap cac du lieu sau day de chay shell: source, domainname, port, document_root"
+echo -n "Nhap cac du lieu sau day de chay shell: source, domainname, port, document_root";read $1 $2 $3 $4
 apache $1 $2 $3 $4
 
