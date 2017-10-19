@@ -1,4 +1,4 @@
-nginx_php () 
+nginx () 
 {
 #!/bin/bash
 #Cai dat thoi gian
@@ -146,4 +146,4 @@ fi
         links $ip:$3/index.php
 	fi
 }
-nginx_php /usr/local toandaica.vn 80 /usr/local/toandaica.vn
+nginx /usr/local toandaica.vn 80 /usr/local/toandaica.vn
