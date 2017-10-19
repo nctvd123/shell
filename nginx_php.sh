@@ -77,7 +77,8 @@ fi
 		echo "    root           $4;" >> $1/nginx/conf/conf.d/$2.conf
 		echo "    fastcgi_pass   127.0.0.1:9000;" >> $1/nginx/conf/conf.d/$2.conf
 		echo "    fastcgi_index  index.php;" >> $1/nginx/conf/conf.d/$2.conf
-		echo "    fastcgi_param  SCRIPT_FILENAME  $4/$fastcgi_script_name;" >> $1/nginx/conf/conf.d/$2.conf
+		echo "    fastcgi_param  SCRIPT_FILENAME  $4;" >> $1/nginx/conf/conf.d/$2.conf
+		sed -i '21s#fastcgi_param  SCRIPT_FILENAME  $4#fastcgi_param  SCRIPT_FILENAME  $4/$fastcgi_script_name#' $1/nginx/conf/conf.d/$2.conf
 		echo "    include        fastcgi_params;" >> $1/nginx/conf/conf.d/$2.conf
 		echo "    }" >> $1/nginx/conf/conf.d/$2.conf
 		echo "        error_page 404 /404.html;" >> $1/nginx/conf/conf.d/$2.conf
