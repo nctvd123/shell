@@ -1,0 +1,25 @@
+#Config apache
+Listen $1
+<VirtualHost *:$1>
+        ServerName $2
+        ServerAlias www.$2
+        ErrorLog logs/$2_error.log
+        CustomLog logs/$2_access.log combined
+        DocumentRoot "$3"
+        <IfModule mod_proxy_fcgi.c>
+                ProxyPassMatch ^/(.*\.php)$ fcgi://127.0.0.1:9000$3"$1"
+        </IfModule>
+        DirectoryIndex wap.php
+        AccessFileName wap.htaccess
+        RewriteEngine On
+        RewriteCond %{REQUEST_METHOD} ^TRACE
+        RewriteRule .* - [F]
+        <Directory "$3">
+        Options +FollowSymLinks -ExecCGI -Includes -Indexes
+        <LimitExcept GET POST >
+        Deny from all
+        </LimitExcept>
+        AllowOverride all
+        Require all granted
+        </Directory>
+</VirtualHost>
