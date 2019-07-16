@@ -60,13 +60,13 @@ fi
 		echo "server {" >> $1/nginx/conf/conf.d/$2.conf
 		echo "    listen       80;" >> $1/nginx/conf/conf.d/$2.conf
 		echo "    server_name  $2;" >> $1/nginx/conf/conf.d/$2.conf
-		echo "    rewrite  ^/(.*) https://$2/index.php permanent;" >> $1/nginx/conf/conf.d/$2.conf
-		echo "}" >> $1/nginx/conf/conf.d/$2.conf
-		echo "server {" >> $1/nginx/conf/conf.d/$2.conf
-		echo "    listen      443;" >> $1/nginx/conf/conf.d/$2.conf
-		echo "    ssl on;" >> $1/nginx/conf/conf.d/$2.conf
-		echo "    ssl_certificate $1/ssl/$2.crt;" >> $1/nginx/conf/conf.d/$2.conf
-		echo "    ssl_certificate_key $1/ssl/$2.key;" >> $1/nginx/conf/conf.d/$2.conf
+		#echo "    rewrite  ^/(.*) https://$2/index.php permanent;" >> $1/nginx/conf/conf.d/$2.conf
+		#echo "}" >> $1/nginx/conf/conf.d/$2.conf
+		#echo "server {" >> $1/nginx/conf/conf.d/$2.conf
+		#echo "    listen      443;" >> $1/nginx/conf/conf.d/$2.conf
+		#echo "    ssl on;" >> $1/nginx/conf/conf.d/$2.conf
+		#echo "    ssl_certificate $1/ssl/$2.crt;" >> $1/nginx/conf/conf.d/$2.conf
+		#echo "    ssl_certificate_key $1/ssl/$2.key;" >> $1/nginx/conf/conf.d/$2.conf
 		echo "    access_log $1/nginx/logs/$2.access.log;" >> $1/nginx/conf/conf.d/$2.conf
 		echo "    error_log $1/nginx/logs/$2.error.log;" >> $1/nginx/conf/conf.d/$2.conf
 		echo "    location / {" >> $1/nginx/conf/conf.d/$2.conf
@@ -77,7 +77,7 @@ fi
 		echo "    root           $4;" >> $1/nginx/conf/conf.d/$2.conf
 		echo "    fastcgi_pass   127.0.0.1:9000;" >> $1/nginx/conf/conf.d/$2.conf
 		echo "    fastcgi_index  index.php;" >> $1/nginx/conf/conf.d/$2.conf
-		echo "    fastcgi_param  SCRIPT_FILENAME    $4/$fastcgi_script_name;" >> $1/nginx/conf/conf.d/$2.conf
+		echo "    fastcgi_param  SCRIPT_FILENAME    $4/"$fastcgi_script_name;"" >> $1/nginx/conf/conf.d/$2.conf
 		echo "    include        fastcgi_params;" >> $1/nginx/conf/conf.d/$2.conf
 		echo "    }" >> $1/nginx/conf/conf.d/$2.conf
 		echo "        error_page 404 /404.html;" >> $1/nginx/conf/conf.d/$2.conf
@@ -92,9 +92,11 @@ fi
 		rpm -ivh "http://dl.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm"
 		yum -y install libmcrypt-devel
 		cd $path_down
-		link_php=`curl -L http://php.net/downloads.php | grep tar.gz | grep 'php-7.1'|grep -v "MD5\|PGP\|SHA1\|SHA256"| cut -d / -f 3`
+		#link_php=`curl -L http://php.net/downloads.php | grep tar.gz | grep 'php-7.1'|grep -v "MD5\|PGP\|SHA1\|SHA256"| cut -d / -f 3`
+		link_php=`php-7.1.30.tar.gz
 		echo $link_php
-		wget http://am1.php.net/get/$link_php/from/this/mirror
+		#wget http://am1.php.net/get/$link_php/from/this/mirror
+		wget https://www.php.net/distributions/php-7.1.30.tar.gz
 		if [ "$?" != 0 ] && [ -d $path_shell ];then
         		echo "Error download php"
 		else
@@ -127,9 +129,9 @@ fi
         		fi
 		fi
 		#cai dat ssl
-		mkdir -p $1/ssl
-		cd $1/ssl
-		openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
+		#mkdir -p $1/ssl
+		#cd $1/ssl
+		#openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout toandaica.vn.key -out toandaica.vn.crt
 		#Tao duong dan document root
  		mkdir -p $4
 		chown -R nginx:nginx $4
