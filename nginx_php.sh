@@ -100,7 +100,7 @@ fi
 		if [ "$?" != 0 ] && [ -d $path_shell ];then
         		echo "Error download php"
 		else
-        		mv mirror $link_php
+        		#mv mirror $link_php
      			version_php=`tar -xvzf $link_php`
         		cd $version_php
         		./configure \--prefix=$1/php \--enable-fpm \--with-libdir=lib64 \--with-bz2 \--with-config-file-path=$1/php/etc \--with-config-file-scan-dir=$1/php/etc/php.d \--with-curl=$1/lib \--with-gd \--with-gettext \--with-jpeg-dir=$1/lib \--with-freetype-dir=$1/lib \--with-kerberos \--with-mcrypt \--with-mhash \--with-mysql \--with-mysqli \--with-pdo-mysql=shared \--with-pdo-sqlite=shared \--with-pear=$1/lib/php \--with-png-dir=$1/lib \--with-pspell \--with-sqlite=shared \--with-tidy \--with-xmlrpc \--with-xsl \--with-zlib \--with-zlib-dir=$1/lib \--with-openssl \--with-iconv \--enable-bcmath \--enable-calendar \--enable-exif \--enable-ftp \--enable-gd-native-ttf \--enable-libxml \--enable-magic-quotes \--enable-soap \--enable-sockets \--enable-mbstring \--enable-zip \--enable-wddx
